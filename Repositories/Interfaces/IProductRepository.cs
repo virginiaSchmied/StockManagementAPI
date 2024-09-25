@@ -9,5 +9,6 @@ namespace StockManagementAPI.Repositories.Interfaces
         Task Insert(Product product);
         Task Update(Product product);
         Task Delete(int id);
+        Task<List<List<Product>>> GetProductsGroupedByCategory();
     }
 }

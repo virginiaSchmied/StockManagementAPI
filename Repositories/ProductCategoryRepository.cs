@@ -9,11 +9,13 @@ namespace StockManagementAPI.Repositories
     {
         private readonly stockManagementDbContext _dbContext;
 
+        // Constructor
         public ProductCategoryRepository(stockManagementDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
+        // Product Category CRUD - works on ProductCategories table
         public async Task<IEnumerable<ProductCategory>> GetAll()
         {
             return await _dbContext.ProductsCategories

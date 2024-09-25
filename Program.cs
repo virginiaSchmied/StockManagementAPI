@@ -22,7 +22,6 @@ namespace StockManagementAPI
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
 
-
             // Add services to the container.
             builder.Configuration.AddJsonFile("appsettings.json");
             var secretKey = builder.Configuration.GetSection("settings:secretkey").Value;
@@ -56,7 +55,7 @@ namespace StockManagementAPI
                 options.UseSqlServer(builder.Configuration.GetConnectionString("MyDbConnection"), sqlOptions =>
                 {
                     sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery);
-                    sqlOptions.EnableRetryOnFailure(); // Para gestionar fallos temporales de conexión
+                    sqlOptions.EnableRetryOnFailure();
                 })
             );
 
@@ -65,7 +64,7 @@ namespace StockManagementAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "StockManagement", Version = "v1" });
 
-                // Configura la autenticación para Swagger
+                // Swagger Authentication
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme",
@@ -85,7 +84,6 @@ namespace StockManagementAPI
                     }
                 });
             });
-
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -118,14 +116,13 @@ namespace StockManagementAPI
                 app.UseSwaggerUI();
             }
 
-            // Correct order of middlewares
             app.UseHttpsRedirection();
 
             // Add UseRouting before UseEndpoints
             app.UseRouting();
 
 
-            // Middleware para personalizar los errores 401 y 403
+            // Middleware for 401 and 403 Status Code
             app.Use(async (context, next) =>
             {
                 await next();

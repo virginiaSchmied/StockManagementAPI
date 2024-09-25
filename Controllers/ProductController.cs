@@ -1,4 +1,5 @@
 ﻿using Abp.Authorization.Users;
+using Azure.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Services.UserAccountMapping;
@@ -6,6 +7,7 @@ using StockManagementAPI.Models.Product;
 using StockManagementAPI.Models.User;
 using StockManagementAPI.Services;
 using StockManagementAPI.Services.Interfaces;
+using System.Runtime.InteropServices;
 
 namespace StockManagementAPI.Controllers
 {
@@ -21,7 +23,6 @@ namespace StockManagementAPI.Controllers
 
         }
 
-
         // PRODUCT CRUD //
 
         [HttpGet]
@@ -34,7 +35,7 @@ namespace StockManagementAPI.Controllers
 
                 if (products == null)
                 {
-                    return NotFound();
+                    return NotFound("No products were found.");
                 }
 
                 return Ok(products);
@@ -50,8 +51,8 @@ namespace StockManagementAPI.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("{id}")]
+        [HttpGet("id/{id}")]
+        //[Route("{id}")]
         [Authorize(Roles = "Admin, Regular")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -60,7 +61,7 @@ namespace StockManagementAPI.Controllers
                 var product = await _productService.GetProductAsync(id);
                 if (product == null)
                 {
-                    return NotFound();
+                    return NotFound("No product were found.");
                 }
                 return Ok(product);
             }
@@ -83,7 +84,7 @@ namespace StockManagementAPI.Controllers
                 var _product = await _productService.AddProductAsync(product);
                 if (_product == null)
                 {
-                    return NotFound();
+                    return NotFound("Something went wrong during the request.");
                 }
                 return CreatedAtAction("Get", new { id = product.Id }, product);
             }
@@ -104,7 +105,6 @@ namespace StockManagementAPI.Controllers
         {
             try
             {
-                // Validar si el producto existe
                 var existingProduct = await _productService.GetProductAsync(id);
                 if (existingProduct == null)
                 {
@@ -115,7 +115,6 @@ namespace StockManagementAPI.Controllers
                     });
                 }
 
-                // Actualizar el producto
                 var updatedProduct = await _productService.UpdateProductAsync(id, product);
                 if (updatedProduct == null)
                 {
@@ -126,7 +125,6 @@ namespace StockManagementAPI.Controllers
                     });
                 }
 
-                // Retornar el producto actualizado
                 return Ok(updatedProduct);
             }
             catch (Exception ex)
@@ -139,8 +137,6 @@ namespace StockManagementAPI.Controllers
             }
         }
 
-
-
         [HttpDelete]
         [Route("{id}")]
         [Authorize(Roles = "Admin")]
@@ -152,9 +148,36 @@ namespace StockManagementAPI.Controllers
 
                 if (product == null)
                 {
-                    return NotFound();
+                    return NotFound("Something went wrong during the request.");
                 }
                 return Ok(product);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(404, new
+                {
+                    status = 400,
+                    errors = new[] { new { error = ex.Message } }
+                });
+            }
+        }
+
+
+        // SPECIAL ENDPOINT
+
+        [HttpGet("amount/{amount}")]
+        //[Route("{amount}")]
+        [Authorize(Roles = "Admin, Regular")]
+        public async Task<IActionResult> GetByAmount(double amount)
+        {
+            try
+            {
+                var productList = await _productService.GetProductListAsync(amount);
+                if (productList == null)
+                {
+                    return NotFound("No products were found. Please check if products are available and consider offering another amount.");
+                }
+                return Ok(productList);
             }
             catch (Exception ex)
             {

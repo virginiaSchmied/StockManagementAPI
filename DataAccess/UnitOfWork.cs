@@ -13,8 +13,10 @@ namespace StockManagementAPI.DataAccess
         private ProductRepository _productRepository;
         private ProductCategoryRepository _productCategoryRepository;
 
-        public UnitOfWork(stockManagementDbContext dbContext) { _dbContext = dbContext; }
-
+        //Constructor
+        public UnitOfWork(stockManagementDbContext dbContext) { 
+            _dbContext = dbContext; 
+        }
 
         // User
         public UserRepository UserRepo

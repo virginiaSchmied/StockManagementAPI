@@ -7,7 +7,7 @@ namespace StockManagementAPI.Models.Product
     public class Product
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // ID auto incremental
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public double Price { get; set; }
         public DateTime UploadDate { get; set; }

@@ -6,7 +6,7 @@ namespace StockManagementAPI.Models.Product
     public class ProductCategory
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // ID auto incremental
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] 
         public int Id { get; set; }
 
         [Required(ErrorMessage = "The field ProductName is required")]

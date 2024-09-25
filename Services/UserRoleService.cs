@@ -9,15 +9,17 @@ namespace StockManagementAPI.Services
     {
         private readonly UnitOfWork _unitOfWork;
 
+        // Constructor
         public UserRoleService(UnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Object> GetAll(int pageNumber, int pageSize, string userId)
+        // UserRole business logic
+        public async Task<Object> GetAllRolesAsync(int pageNumber, int pageSize)
         {
             var roles = await _unitOfWork.RoleRepo.GetAll();
-
+            var totalProducts = roles.Count();
             var pagedAccounts = roles
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -28,20 +30,21 @@ namespace StockManagementAPI.Services
                 return null;
             }
 
+            var totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
             var prevPage = pageNumber > 1 ? "Get?pageNumber=" + (pageNumber - 1) + "&pageSize=" + pageSize : null;
-
             var nextPage = pageNumber < (int)Math.Ceiling((double)pagedAccounts.Count() / pageSize) ? "Get?pageNumber=" + (pageNumber + 1) + "&pageSize=" + pageSize : null;
 
             var result = new
             {
                 Roles = pagedAccounts,
                 prevPage = prevPage,
-                nextPage = nextPage
+                nextPage = nextPage,
+                TotalPages = totalPages
             };
             return result;
         }
 
-        public async Task<UserRole> GetById(int id, string userId)
+        public async Task<UserRole> GetUserRoleAsync(int id)
         {
             var role = await _unitOfWork.RoleRepo.GetById(id);
 
@@ -52,43 +55,42 @@ namespace StockManagementAPI.Services
             return role;
         }
 
-        public async Task<UserRole> Insert(UserRole roleDto, string userId)
+        public async Task<UserRole> AddUserRoleAsync(UserRole userRole)
         {
 
-            var role = new UserRole
+            var _userRole = new UserRole
             {
-                Id = roleDto.Id,
-                Name = roleDto.Name,
-                Description = roleDto.Description
+                Name = userRole.Name,
+                Description = userRole.Description
             };
 
-            await _unitOfWork.RoleRepo.Insert(role);
+            await _unitOfWork.RoleRepo.Insert(_userRole);
             await _unitOfWork.SaveChangesAsync();
-            return role;
+            return _userRole;
         }
 
-        public async Task<UserRole> Update(int id, UserRole roleDto)
+        public async Task<UserRole> UpdateUserRoleAsync(int id, UserRole userRole)
         {
-            var role = await _unitOfWork.RoleRepo.GetById(id);
+            var _userRole = await _unitOfWork.RoleRepo.GetById(id);
 
-            if (role == null)
+            if (_userRole == null)
             {
                 return null;
             }
 
-            role.Name = roleDto.Name;
-            role.Description = roleDto.Description;
+            _userRole.Name = userRole.Name;
+            _userRole.Description = userRole.Description;
 
-            await _unitOfWork.RoleRepo.Update(role);
+            await _unitOfWork.RoleRepo.Update(_userRole);
             await _unitOfWork.SaveChangesAsync();
-            return role;
+            return _userRole;
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> DeleteUserRoleAsync(int id)
         {
-            var role = await _unitOfWork.RoleRepo.GetById(id);
+            var userRole = await _unitOfWork.RoleRepo.GetById(id);
 
-            if (role == null)
+            if (userRole == null)
             {
                 return false;
             }

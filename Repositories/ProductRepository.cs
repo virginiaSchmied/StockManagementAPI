@@ -9,11 +9,13 @@ namespace StockManagementAPI.Repositories
     {
         private readonly stockManagementDbContext _dbContext;
 
+        // Constructor
         public ProductRepository(stockManagementDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
+        // Product CRUD - works on Products table
         public async Task<IEnumerable<Product>> GetAll()
         {
             return await _dbContext.Products
@@ -42,6 +44,19 @@ namespace StockManagementAPI.Repositories
             {
                 _dbContext.Products.Remove(product);
             }
+        }
+
+        // Special method
+        public async Task<List<List<Product>>> GetProductsGroupedByCategory()
+        {
+            var productsByCategory = await _dbContext.Products
+                .GroupBy(p => p.IdProductCategory_Id)                   
+                .Select(group => group                         
+                    .OrderByDescending(p => p.Price)           
+                    .ToList())                                 
+                .ToListAsync();                                
+
+            return productsByCategory;
         }
     }
 }

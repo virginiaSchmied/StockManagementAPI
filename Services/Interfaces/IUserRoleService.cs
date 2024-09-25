@@ -5,10 +5,10 @@ namespace StockManagementAPI.Services.Interfaces
 {
     public interface IUserRoleService 
     {
-        Task<Object> GetAll(int pageNumber, int pageSize, string userId);
-        Task<UserRole> GetById(int id, string userId);
-        Task<UserRole> Insert(UserRole role, string userId);
-        Task<UserRole> Update(int id, UserRole role);
-        Task<bool> Delete(int id);
+        Task<Object> GetAllRolesAsync(int pageNumber, int pageSize);
+        Task<UserRole> GetUserRoleAsync(int id);
+        Task<UserRole> AddUserRoleAsync(UserRole role);
+        Task<UserRole> UpdateUserRoleAsync(int id, UserRole role);
+        Task<bool> DeleteUserRoleAsync(int id);
     }
 }

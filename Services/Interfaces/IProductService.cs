@@ -9,5 +9,6 @@ namespace StockManagementAPI.Services.Interfaces
         Task<Product> AddProductAsync(Product product);
         Task<Product> UpdateProductAsync(int id, Product product);
         Task<Product> DeleteProductAsync(int id);
+        Task<List<Product>> GetProductListAsync(double amount);
     }
 }

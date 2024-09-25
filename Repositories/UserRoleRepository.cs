@@ -10,11 +10,13 @@ namespace StockManagementAPI.Repositories
     {
         private readonly stockManagementDbContext _dbContext;
 
+        // Constructor
         public UserRoleRepository(stockManagementDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
+        // UserRole CRUD - works on UserRoles table
         public async Task<IEnumerable<UserRole>> GetAll()
         {
             return await _dbContext.UserRole

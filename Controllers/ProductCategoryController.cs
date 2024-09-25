@@ -11,6 +11,7 @@ namespace StockManagementAPI.Controllers
     {
         private readonly ProductCategoryService _productCategoryService;
 
+        // Constructor
         public ProductCategoryController(ProductCategoryService productCategoryService)
         {
             _productCategoryService = productCategoryService;

@@ -2,25 +2,24 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Services.UserAccountMapping;
-using StockManagementAPI.Models.User;
 using StockManagementAPI.Services;
+using StockManagementAPI.Models.User;
 
 namespace StockManagementAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserRoleController : ControllerBase
     {
-        private readonly UserService _userService;
+        private readonly UserRoleService _userRoleService;
 
         // Constructor
-        public UserController(UserService userService)
+        public UserRoleController(UserRoleService userRoleService)
         {
-            _userService = userService;
+            _userRoleService = userRoleService;
 
         }
-
-        // USER CRUD //
+        // USER ROLE CRUD //
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -28,14 +27,14 @@ namespace StockManagementAPI.Controllers
         {
             try
             {
-                var users = await _userService.GetAllUsersAsync(pageNumber, pageSize);
+                var userRoles = await _userRoleService.GetAllRolesAsync(pageNumber, pageSize);
 
-                if (users == null)
+                if (userRoles == null)
                 {
                     return NotFound();
                 }
 
-                return Ok(users);
+                return Ok(userRoles);
 
             }
             catch (Exception ex)
@@ -55,12 +54,12 @@ namespace StockManagementAPI.Controllers
         {
             try
             {
-                var _user = await _userService.GetUserAsync(id);
-                if (_user == null)
+                var _userRole = await _userRoleService.GetUserRoleAsync(id);
+                if (_userRole == null)
                 {
                     return NotFound();
                 }
-                return Ok(_user);
+                return Ok(_userRole);
             }
             catch (Exception ex)
             {
@@ -74,16 +73,16 @@ namespace StockManagementAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin,Regular")]
-        public async Task<IActionResult> Post(User user)
+        public async Task<IActionResult> Post(Models.User.UserRole userRole)
         {
             try
             {
-                var _user = await _userService.AddUserAsync(user);
-                if (_user == null)
+                var _userRole = await _userRoleService.AddUserRoleAsync(userRole);
+                if (_userRole == null)
                 {
                     return NotFound();
                 }
-                return CreatedAtAction("Get", new { id = user.Id }, user);
+                return CreatedAtAction("Get", new { id = userRole.Id }, userRole);
             }
             catch (Exception ex)
             {
@@ -98,12 +97,12 @@ namespace StockManagementAPI.Controllers
         [HttpPut]
         [Route("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Put(int id, User user)
+        public async Task<IActionResult> Put(Models.User.UserRole userRole, int id)
         {
             try
             {
-                var _user = await _userService.UpdateUserAsync(id, user);
-                if (_user == null)
+                var _userRole = await _userRoleService.UpdateUserRoleAsync(id, userRole);
+                if (_userRole == null)
                 {
                     return NotFound();
                 }
@@ -126,13 +125,13 @@ namespace StockManagementAPI.Controllers
         {
             try
             {
-                var user = await _userService.DeleteUserAsync(id);
+                var userRole = await _userRoleService.DeleteUserRoleAsync(id);
 
-                if (user == null)
+                if (userRole == null)
                 {
                     return NotFound();
                 }
-                return Ok(user);
+                return Ok(userRole);
             }
             catch (Exception ex)
             {
