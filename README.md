@@ -6,7 +6,7 @@ Esta aplicacion contiene los endpoints del sistema de gestion de stock de produc
 ## Instalación
 
 ## Repositorio a clonar: https://github.com/virginiaSchmied/StockManagementAPI.git
-La solución se encuentra en la rama dev. Realizar el cambio a dicha rama a través de git checkout dev.
+La solución se encuentra en la rama dev. Realizar el cambio a dicha rama a través del comando git checkout dev.
 
 
  
