@@ -20,6 +20,7 @@ Security=True; Trusted_Connection=SSPI;MultipleActiveResultSets=true;Trust Serve
 3) Creacion de base de datos y migracion de datos: En PowerShell para desarrolladores, ejecutar los siguientes comandos:
 
 dotnet ef migrations add InitialCreate
+
 dotnet ef database update
 
 Estos comandos crean la base de datos de nombre stockManagement y completa las tablas con la informacion
